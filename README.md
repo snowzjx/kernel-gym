@@ -3,5 +3,11 @@
 ### DSL
 
 ```
-f("kprobe__sys_clone").before().type("sk_buff").properties("pa").rescale(0, 100)
+Function([func_name])
+    .arg([arg_type], [arg_name]])
+    .next()
+    .arg([arg_type], [arg_name]]).extract([property])
+    .next()
+    .arg([arg_type], [arg_name]]).extract([property]).rescale(0, 100)
+    .next()
 ```
