@@ -1,19 +1,40 @@
 from __future__ import annotations
+from typing import List
+from jinja2 import Template
+from .bpf_template import bpf_template
 
 
 class Function:
 
     def __init__(self, function_name: str):
         self._function_name: str = function_name
-        self._arg_observer_list = []
+        self._arg_observer_list: List[Argument] = []
+        self._header_list: List[str] = []
+
+    @property
+    def function_name(self) -> str:
+        return self._function_name
+
+    @property
+    def arg_observer_list(self) -> List[Argument]:
+        return self._arg_observer_list
+
+    @property
+    def header_list(self) -> List[str]:
+        return self._header_list
 
     def arg(self, arg_type: str, arg_name: str) -> Argument:
         argument = Argument(self, arg_type, arg_name)
         self._arg_observer_list.append(argument)
         return argument
 
-    def to_bpf_prog(self):
-        pass
+    def header(self, header_file_name: str) -> Function:
+        self._header_list.append(header_file_name)
+        return self
+
+    def to_bpf_prog(self) -> str:
+        template = Template(bpf_template)
+        return template.render(function=self)
 
 
 class Argument:
@@ -22,22 +43,46 @@ class Argument:
         self._f = f
         self._arg_type = arg_type
         self._arg_name = arg_name
-        self._extracted_prop = None
-        self._rescale_low = None
-        self._rescale_high = None
+        self._extractor_list: List[Extractor] = []
 
-    def extract(self, prop: str) -> Argument:
-        if self._extracted_prop is not None:
-            raise Exception("Only extract once is allowed...")
-        self._extracted_prop = prop
-        return self
+    @property
+    def arg_type(self):
+        return self._arg_type
 
-    def rescale(self, low: int, high: int) -> Argument:
-        if self._rescale_low is not None or self._rescale_high is not None:
-            raise Exception("Only rescale once is allowed...")
-        self._rescale_low = low
-        self._rescale_high = high
+    @property
+    def arg_name(self):
+        return self._arg_name
+
+    @property
+    def extractor_list(self):
+        return self._extractor_list
+
+    def extract(self, prop: str = None, rescale_low: int = None, rescale_high: int = None) -> Argument:
+        if prop is None:
+            return self
+        extractor: Extractor = Extractor(prop, rescale_low, rescale_high)
+        self._extractor_list.append(extractor)
         return self
 
     def next(self) -> Function:
         return self._f
+
+
+class Extractor:
+
+    def __init__(self, prop: str, rescale_low: int = None, rescale_high: int = None):
+        self._prop = prop
+        self._rescale_low = None
+        self._rescale_high = None
+
+    @property
+    def prop(self):
+        return self._prop
+
+    @property
+    def rescale_low(self):
+        return self._rescale_low
+
+    @property
+    def rescale_high(self):
+        return self._rescale_high

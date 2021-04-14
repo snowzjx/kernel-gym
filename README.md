@@ -8,6 +8,4 @@ Function([func_name])
     .next()
     .arg([arg_type], [arg_name]]).extract([property])
     .next()
-    .arg([arg_type], [arg_name]]).extract([property]).rescale(0, 100)
-    .next()
 ```

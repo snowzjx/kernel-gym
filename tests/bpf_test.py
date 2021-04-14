@@ -1,8 +1,11 @@
 from bcc import BPF
 
 prog: str = '''
-int kprobe__sys_clone(void *ctx) { 
-    bpf_trace_printk("Hello, World!\\n"); 
+#include <uapi/linux/ptrace.h>
+#include <net/sock.h>
+
+int kprobe__tcp_connect(struct pt_regs *ctx, struct sock *sk) { 
+    bpf_trace_printk("sk: %d\\n", &sk->__sk_common.skc_rcv_saddr);
     return 0; 
 }
 '''
@@ -10,7 +13,7 @@ int kprobe__sys_clone(void *ctx) {
 
 def main():
     bpf = BPF(text=prog)
-    bpf.attach_kprobe(event=bpf.get_syscall_fnname("clone"), fn_name="kprobe__sys_clone")
+    # bpf.attach_kprobe(event=bpf.get_syscall_fnname("clone"), fn_name="kprobe__sys_clone")
     bpf.trace_print()
 
 
