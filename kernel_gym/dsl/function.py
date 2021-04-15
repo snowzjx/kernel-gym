@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Optional
 from jinja2 import Template
 from .bpf_template import bpf_template
 
@@ -70,10 +70,10 @@ class Argument:
 
 class Extractor:
 
-    def __init__(self, prop: str, rescale_low: int = None, rescale_high: int = None):
-        self._prop = prop
-        self._rescale_low = None
-        self._rescale_high = None
+    def __init__(self, prop: str, rescale_low: Optional[int] = None, rescale_high: Optional[int] = None):
+        self._prop: str = prop
+        self._rescale_low: Optional[int] = rescale_low
+        self._rescale_high: Optional[int] = rescale_high
 
     @property
     def prop(self):

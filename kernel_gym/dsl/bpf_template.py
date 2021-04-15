@@ -17,7 +17,7 @@ int kprobe__{{ function.function_name }}(struct pt_regs *ctx,
 {% else -%}
     int obs_{{loop.index}} = {{ argument.arg_name }};
 {% endif -%}
-{% endfor -%}
+{% endfor %}
     return 0;
 }
 '''
