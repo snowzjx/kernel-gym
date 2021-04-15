@@ -4,7 +4,7 @@ from jinja2 import Template
 from .bpf_template import bpf_template
 
 
-class Function:
+class Function(object):
 
     def __init__(self, function_name: str):
         self._function_name: str = function_name
@@ -37,7 +37,7 @@ class Function:
         return template.render(function=self)
 
 
-class Argument:
+class Argument(object):
 
     def __init__(self, f: Function, arg_type: str, arg_name: str):
         self._f = f
@@ -68,7 +68,7 @@ class Argument:
         return self._f
 
 
-class Extractor:
+class Extractor(object):
 
     def __init__(self, prop: str, rescale_low: Optional[int] = None, rescale_high: Optional[int] = None):
         self._prop: str = prop

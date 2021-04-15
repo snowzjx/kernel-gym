@@ -1,0 +1,30 @@
+exports_files([
+    "README.md",
+])
+
+py_library(
+    name = "KernelGym",
+    deps = [
+        "//kernel_gym",
+        "//kernel_gym/dsl",
+        "//kernel_gym/envs",
+        "//kernel_gym/service",
+        "//kernel_gym/utils",
+        "//kernel_gym/views",
+    ],
+)
+
+py_binary(
+    name = "package",
+    srcs = ["empty.py"],
+    main = "empty.py",
+    deps = [
+        ":KernelGym",
+    ],
+)
+
+genrule(
+    name = "make_empty_python_file",
+    outs = ["empty.py"],
+    cmd = "touch $@",
+)

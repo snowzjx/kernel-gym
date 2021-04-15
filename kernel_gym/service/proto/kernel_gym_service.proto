@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package kernel_gym;
+
+message Int64List {
+  repeated int64 value = 1;
+}
+
+message Observation {
+  oneof value {
+    Int64List int64_list = 1;
+    int64 scalar_int64 = 2;
+  }
+}
