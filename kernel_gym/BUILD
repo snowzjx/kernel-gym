@@ -8,6 +8,7 @@ py_library(
         "//kernel_gym/dsl",
         "//kernel_gym/envs",
         "//kernel_gym/service",
+        "//kernel_gym/spaces",
         "//kernel_gym/utils",
         "//kernel_gym/views",
     ],

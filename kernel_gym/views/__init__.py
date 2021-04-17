@@ -1,1 +1,2 @@
-from .observation import ObservationView
+from kernel_gym.views.observation import ObservationView
+from kernel_gym.views.observation_space import ObservationSpace

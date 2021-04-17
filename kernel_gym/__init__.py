@@ -1,1 +1,1 @@
-from . import dsl
+from kernel_gym import dsl

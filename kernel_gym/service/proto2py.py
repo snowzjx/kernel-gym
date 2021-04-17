@@ -1,13 +1,11 @@
-from typing import Union
-
 import numpy as np
-
-from kernel_gym.service.proto import ScalarRange
+from typing import Union
+from kernel_gym.service.proto import PbScalarRange
 
 observation_t = Union[np.ndarray, int]
 
 
-def scalar_range2tuple(sr: ScalarRange, defaults=(-np.inf, np.inf)):
+def scalar_range2tuple(sr: PbScalarRange, defaults=(-np.inf, np.inf)):
     """Convert a ScalarRange to a tuple of (min, max) bounds."""
     return (
         sr.min.value if sr.HasField("min") else defaults[0],
