@@ -35,8 +35,6 @@ class MockGetObservation(object):
         return MockGetObservationReply(ret)
 
 
-
-
 spaces = [
     PbObservationSpace(
         name="cc",
