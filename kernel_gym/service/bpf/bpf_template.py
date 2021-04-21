@@ -10,11 +10,11 @@ class BPFTemplate(object):
     {%- if argument.extractor_list|length %}
     {%- for extractor in argument.extractor_list%}
         int obs_{{ ns.index }} = {{ argument.arg_name }}->{{ extractor.prop }};
-        {% set ns.index = ns.index + 1 %}
+        {%- set ns.index = ns.index + 1 -%}
     {% endfor %}
     {% else -%}
         int obs_{{ ns.index }} = {{ argument.arg_name }};
-        {% set ns.index = ns.index + 1 %}
+        {%- set ns.index = ns.index + 1 -%}
     {% endif -%}
     {% endfor %}
         return 0;
@@ -24,6 +24,7 @@ class BPFTemplate(object):
     BPF_PROG_TEMPLATE = """
     {% for header in headers %}
     #include<{{header}}>
-    {% endfor -%}
-    {{ prog }}
+    {% endfor %}
+    BPF_HASH({{ map_name }}, int, int, 1024);
+    {{- prog -}}
     """
