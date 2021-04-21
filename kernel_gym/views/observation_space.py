@@ -7,18 +7,21 @@ from gym.spaces import Space, Box
 from kernel_gym.spaces import Scalar
 from kernel_gym.service import observation_t, scalar_range2tuple
 from kernel_gym.service.proto import PbObservationSpace, PbObservation
+from kernel_gym.dsl import Function
 
 
 class ObservationSpace(object):
     def __init__(
             self, id: str,
             index: int,
+            dsl: Function,
             space: Space,
             translate: Callable[[Union[observation_t, PbObservation]], observation_t],
             to_string: Callable[[observation_t], str],
             default_value: observation_t):
         self.id = id
         self.index = index
+        self.dsl = dsl
         self.space = space
         self.translate = translate
         self.to_string = to_string
@@ -38,7 +41,7 @@ class ObservationSpace(object):
         )
 
     @classmethod
-    def from_proto(cls, index: int, proto: PbObservationSpace):
+    def from_proto(cls, index: int, dsl: Function, proto: PbObservationSpace):
         def make_box(scalar_range_list, dtype, defaults):
             bounds = [scalar_range2tuple(r, defaults) for r in scalar_range_list]
             return Box(
@@ -88,6 +91,7 @@ class ObservationSpace(object):
             id=proto.name,
             index=index,
             space=space,
+            dsl=dsl,
             translate=translate,
             to_string=to_string,
             default_value=translate(proto.default_value),
@@ -96,6 +100,7 @@ class ObservationSpace(object):
     def make_derived_space(
             self,
             id: str,
+            dsl: Function,
             translate: Callable[[observation_t], observation_t],
             space: Optional[Space] = None,
             default_value: Optional[observation_t] = None,
@@ -104,6 +109,7 @@ class ObservationSpace(object):
         return ObservationSpace(
             id=id,
             index=self.index,
+            dsl=dsl,
             space=space or self.space,
             translate=lambda observation: translate(self.translate(observation)),
             to_string=to_string or self.to_string,

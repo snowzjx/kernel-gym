@@ -15,6 +15,7 @@ from kernel_gym.views import (
     ObservationView,
     ObservationSpace,
 )
+from kernel_gym.dsl import Function
 
 
 class MockGetObservationReply(object):
@@ -36,18 +37,21 @@ class MockGetObservation(object):
 
 
 spaces = [
-    PbObservationSpace(
-        name="cc",
-        int64_range_list=PbScalarRangeList(
-            range=[
-                PbScalarRange(
-                    min=PbScalarLimit(value=-100), max=PbScalarLimit(value=100)
-                ),
-                PbScalarRange(
-                    min=PbScalarLimit(value=-100), max=PbScalarLimit(value=100)
-                ),
-            ]
-        ),
+    (
+        Function("mock function"),
+        PbObservationSpace(
+            name="cc",
+            int64_range_list=PbScalarRangeList(
+                range=[
+                    PbScalarRange(
+                        min=PbScalarLimit(value=-100), max=PbScalarLimit(value=100)
+                    ),
+                    PbScalarRange(
+                        min=PbScalarLimit(value=-100), max=PbScalarLimit(value=100)
+                    ),
+                ]
+            ),
+        )
     )
 ]
 

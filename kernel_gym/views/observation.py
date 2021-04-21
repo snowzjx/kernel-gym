@@ -1,21 +1,22 @@
+from typing import List, Dict, Tuple, Callable
 from kernel_gym.service.proto import PbObservationSpace
 from kernel_gym.service.proto import StepRequest, StepReply
+from kernel_gym.dsl import Function
 from .observation_space import ObservationSpace
-from typing import List, Dict, Callable
 
 
 class ObservationView(object):
     def __init__(
             self,
             get_observation: Callable[[StepRequest], StepReply],
-            spaces: List[PbObservationSpace]):
+            spaces: List[Tuple[Function, PbObservationSpace]]):
         if not spaces:
             raise ValueError("No observation spaces")
         self.spaces: Dict[str, ObservationSpace] = {}
         self._get_observation = get_observation
         self.session_id = -1
         for i, s in enumerate(spaces):
-            self._add_space(ObservationSpace.from_proto(i, s))
+            self._add_space(ObservationSpace.from_proto(i, s[0], s[1]))
 
     def __getitem__(self, observation_space_id: str):
         space = self.spaces[observation_space_id]
