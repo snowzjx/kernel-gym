@@ -1,7 +1,5 @@
 from __future__ import annotations
 from typing import List, Optional
-from jinja2 import Template
-from .bpf_template import bpf_template
 
 
 class Function(object):
@@ -10,6 +8,7 @@ class Function(object):
         self._function_name: str = function_name
         self._arg_observer_list: List[Argument] = []
         self._header_list: List[str] = []
+        self.no_obs = 1
 
     @property
     def function_name(self) -> str:
@@ -31,10 +30,6 @@ class Function(object):
     def header(self, header_file_name: str) -> Function:
         self._header_list.append(header_file_name)
         return self
-
-    def to_bpf_prog(self) -> str:
-        template = Template(bpf_template)
-        return template.render(function=self)
 
 
 class Argument(object):
@@ -62,6 +57,7 @@ class Argument(object):
             return self
         extractor: Extractor = Extractor(prop, rescale_low, rescale_high)
         self._extractor_list.append(extractor)
+        self._f.no_obs = self._f.no_obs + 1
         return self
 
     def next(self) -> Function:

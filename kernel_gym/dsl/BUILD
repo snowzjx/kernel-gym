@@ -5,7 +5,6 @@ py_library(
     srcs = [
         "__init__.py",
         "function.py",
-        "bpf_template.py",
     ],
     visibility = ["//visibility:public"],
 )

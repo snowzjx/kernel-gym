@@ -1,6 +1,5 @@
-import numpy as np
+from unittest import TestCase
 import pytest
-from gym.spaces import Box
 from kernel_gym.service.proto import (
     StepRequest,
     StepReply,
@@ -56,49 +55,37 @@ spaces = [
 ]
 
 
-def test_empty_space():
-    with pytest.raises(ValueError) as ctx:
-        ObservationView(MockGetObservation(), [])
-    assert str(ctx.value) == "No observation spaces"
-    print("test_empty_space passed ...")
+class TestObservation(TestCase):
 
+    def test_empty_space(self):
+        with pytest.raises(ValueError) as ctx:
+            ObservationView(MockGetObservation(), [])
+        assert str(ctx.value) == "No observation spaces"
+        print("test_empty_space passed ...")
 
-def test_invalid_observation_name():
-    observation = ObservationView(MockGetObservation(), spaces)
-    with pytest.raises(KeyError) as ctx:
-        _ = observation["invalid"]
-    assert str(ctx.value) == "'invalid'"
-    print("test_invalid_observation_name passed ...")
+    def test_invalid_observation_name(self):
+        observation = ObservationView(MockGetObservation(), spaces)
+        with pytest.raises(KeyError) as ctx:
+            _ = observation["invalid"]
+        assert str(ctx.value) == "'invalid'"
+        print("test_invalid_observation_name passed ...")
 
+    def test_get_observation_with_name(self):
+        mock = MockGetObservation(
+            ret=[
+                PbObservation(int64_list=PbInt64List(value=[-5, 15]))
+            ]
+        )
+        observation = ObservationView(mock, spaces)
+        print(observation["cc"])
+        print("test_get_observation_with_name passed ...")
 
-def test_get_observation_with_name():
-    mock = MockGetObservation(
-        ret=[
-            PbObservation(int64_list=PbInt64List(value=[-5, 15]))
-        ]
-    )
-    observation = ObservationView(mock, spaces)
-    print(observation["cc"])
-    print("test_get_observation_with_name passed ...")
-
-
-def test_get_observation_with_attr():
-    mock = MockGetObservation(
-        ret=[
-            PbObservation(int64_list=PbInt64List(value=[-5, 15]))
-        ]
-    )
-    observation = ObservationView(mock, spaces)
-    print(observation.cc())
-    print("test_get_observation_with_attr passed ...")
-
-
-def main():
-    test_empty_space()
-    test_invalid_observation_name()
-    test_get_observation_with_name()
-    test_get_observation_with_attr()
-
-
-if __name__ == "__main__":
-    main()
+    def test_get_observation_with_attr(self):
+        mock = MockGetObservation(
+            ret=[
+                PbObservation(int64_list=PbInt64List(value=[-5, 15]))
+            ]
+        )
+        observation = ObservationView(mock, spaces)
+        print(observation.cc())
+        print("test_get_observation_with_attr passed ...")

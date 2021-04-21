@@ -23,6 +23,10 @@ class KernelGym(gym.Env):
             logging_level = logging.DEBUG
         self.logger.setLevel(logging_level)
 
+        self._session_id: Optional[int] = None
+
+        # TODO Setup backend BPF service
+
     def step(self, action):
         pass
 
