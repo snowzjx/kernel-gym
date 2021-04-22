@@ -1,5 +1,4 @@
 from typing import List, Set
-from bcc import BPF
 from kernel_gym.dsl import Function
 from kernel_gym.service.bpf import BPFTemplate
 from jinja2 import Template

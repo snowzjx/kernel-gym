@@ -2,6 +2,18 @@ syntax = "proto3";
 
 package kernel_gym;
 
+service KernelGymService {
+  rpc StartBPF(StartBPFRequest) returns (StartBPFReply);
+}
+
+message StartBPFRequest {
+  string bpf_program = 1;
+}
+
+message StartBPFReply {
+  int32 ret_code = 1;
+}
+
 message StepRequest {
   int64 session_id= 1;
   repeated int32 action = 2;

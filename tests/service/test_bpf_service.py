@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from bcc import BPF
+import grpc
 
+from kernel_gym.service.proto import KernelGymServiceStub, StartBPFRequest
 from kernel_gym.service import BPFService
 from kernel_gym.dsl import Function
 
@@ -23,4 +24,12 @@ class TestBPFService(TestCase):
         service.add_bpf_function(func2)
         bpf_prog = service.render()
         print(bpf_prog)
-        BPF(text=bpf_prog)
+
+        channel = grpc.insecure_channel('localhost:50051')
+        stub = KernelGymServiceStub(channel)
+        request = StartBPFRequest(bpf_program=bpf_prog)
+        reply = stub.StartBPF(request)
+
+
+
+

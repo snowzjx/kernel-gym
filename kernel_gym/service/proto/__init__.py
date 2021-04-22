@@ -1,4 +1,6 @@
 from kernel_gym.service.proto.kernel_gym_service_pb2 import (
+    StartBPFRequest,
+    StartBPFReply,
     StepRequest,
     StepReply,
     Observation as PbObservation,
@@ -7,4 +9,12 @@ from kernel_gym.service.proto.kernel_gym_service_pb2 import (
     ScalarRangeList as PbScalarRangeList,
     ScalarLimit as PbScalarLimit,
     Int64List as PbInt64List
+)
+
+from kernel_gym.service.proto.kernel_gym_service_pb2_grpc import (
+    KernelGymService,
+    KernelGymServiceStub,
+    KernelGymServiceServicer,
+    add_KernelGymServiceServicer_to_server,
+    KernelGymServiceStub,
 )
