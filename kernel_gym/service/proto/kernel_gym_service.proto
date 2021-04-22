@@ -4,6 +4,7 @@ package kernel_gym;
 
 service KernelGymService {
   rpc StartBPF(StartBPFRequest) returns (StartBPFReply);
+  rpc Step(StepRequest) returns (StepReply);
 }
 
 message StartBPFRequest {

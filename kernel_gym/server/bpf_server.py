@@ -1,28 +1,40 @@
 import asyncio
-import grpc
 import logging
+from typing import Optional
+
+import grpc
 from bcc import BPF
+
 from kernel_gym.service.proto import (
     KernelGymServiceServicer,
     StartBPFRequest,
     StartBPFReply,
+    StepRequest,
+    StepReply,
     add_KernelGymServiceServicer_to_server,
 )
 
 
 class BPFServiceServicer(KernelGymServiceServicer):
     def __init__(self):
-        self._b = None
+        self._b: Optional[BPF] = None
 
     def StartBPF(self, request: StartBPFRequest, context) -> StartBPFReply:
         logging.info("Starting BPF ...")
         try:
-            b = BPF(text=request.bpf_program)
-            self._b = b
+            self._b = BPF(text=request.bpf_program)
             return StartBPFReply(ret_code=0)
         except Exception as e:
             logging.info(str(e))
             return StartBPFReply(ret_code=-1)
+
+    def Step(self, request: StepRequest, context) -> StepReply:
+        logging.info("Stepping ...")
+        # TODO For test only
+        _map = self._b["test"]
+        for key in _map.keys():
+            print(f"Key: {key} and Value: {_map[key]}")
+        return StepReply()
 
 
 async def serve():
