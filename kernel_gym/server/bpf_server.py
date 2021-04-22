@@ -12,14 +12,13 @@ from kernel_gym.service.proto import (
 
 class BPFServiceServicer(KernelGymServiceServicer):
     def __init__(self):
-        self._bpf = None
-        self.stop = False
+        self._b = None
 
     def StartBPF(self, request: StartBPFRequest, context) -> StartBPFReply:
         logging.info("Starting BPF ...")
         try:
             b = BPF(text=request.bpf_program)
-            logging.info(b)
+            self._b = b
             return StartBPFReply(ret_code=0)
         except Exception as e:
             logging.info(str(e))
