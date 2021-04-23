@@ -4,7 +4,7 @@ from kernel_gym.service.bpf import BPFTemplate
 from jinja2 import Template
 
 
-class BPFService:
+class BPFRender:
     def __init__(self, map_name: str):
         self._map_name = map_name
         self._bpf_func_list: List[Function] = []
@@ -18,9 +18,9 @@ class BPFService:
         program = ""
         start_index = 0
         for func in self._bpf_func_list:
-            program += BPFService._fun_to_bpf(func, self._map_name, start_index)
+            program += BPFRender._fun_to_bpf(func, self._map_name, start_index)
             start_index += func.no_obs - 1
-        return BPFService._prog_to_bpf(set(self._bpf_header_list), self._map_name, program)
+        return BPFRender._prog_to_bpf(set(self._bpf_header_list), self._map_name, program)
 
     @staticmethod
     def _fun_to_bpf(func: Function, map_name: str, start_index: int) -> str:
