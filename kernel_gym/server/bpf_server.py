@@ -18,22 +18,24 @@ from kernel_gym.service.proto import (
 class BPFServiceServicer(KernelGymServiceServicer):
     def __init__(self):
         self._b: Optional[BPF] = None
+        self.logger = logging.getLogger("compiler_gym.server")
+        self.logger.setLevel(logging.INFO)
 
     def StartBPF(self, request: StartBPFRequest, context) -> StartBPFReply:
-        logging.info("Starting BPF ...")
+        self.logger.info("Installing BPF Program...")
         try:
             self._b = BPF(text=request.bpf_program)
             return StartBPFReply(ret_code=0)
         except Exception as e:
-            logging.info(str(e))
+            self.logger.info(str(e))
             return StartBPFReply(ret_code=-1)
 
     def Step(self, request: StepRequest, context) -> StepReply:
-        logging.info("Stepping ...")
+        self.logger.info("Requiring Stepping ...")
         # TODO For test only
         _map = self._b["test"]
         for key in _map.keys():
-            print(f"Key: {key} and Value: {_map[key]}")
+            self.logger.info(f"Key: {key} and Value: {_map[key]}")
         return StepReply()
 
 
