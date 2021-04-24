@@ -61,6 +61,10 @@ class Argument(object):
         return self
 
     def next(self) -> Function:
+        """
+
+        @rtype: object
+        """
         return self._f
 
 

@@ -7,6 +7,7 @@ from kernel_gym.service.proto import KernelGymServiceStub
 Request = TypeVar("Request")
 Reply = TypeVar("Reply")
 
+
 class StubMethod(Protocol):
     def __call__(
             self, a: Request, timeout: float
@@ -22,7 +23,7 @@ class BPFConnection(object):
     ):
         self.channel = grpc.insecure_channel(endpoint)
         self.stub = KernelGymServiceStub(self.channel)
-        self.logger = logger or logging.getLogger("")
+        self.logger = logger or logging.getLogger("compiler_gym.connection")
 
     def close(self):
         self.channel.close()
@@ -41,4 +42,3 @@ class BPFConnection(object):
         except grpc.RpcError as e:
             # TODO exception handler
             raise e
-
