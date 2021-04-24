@@ -29,6 +29,3 @@ class TestBPFService(TestCase):
     def test_step(self):
         request = StepRequest()
         self._connection(self._connection.stub.Step, request)
-
-
-
