@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Callable
 from kernel_gym.service.proto import PbObservationSpace
 from kernel_gym.service.proto import StepRequest, StepReply
-from kernel_gym.dsl import Function
+from kernel_gym.dsl import Observer
 from .observation_space import ObservationSpace
 
 
@@ -9,7 +9,7 @@ class ObservationView(object):
     def __init__(
             self,
             get_observation: Callable[[StepRequest], StepReply],
-            spaces: List[Tuple[Function, PbObservationSpace]]):
+            spaces: List[Tuple[Observer, PbObservationSpace]]):
         if not spaces:
             raise ValueError("No observation spaces")
         self.spaces: Dict[str, ObservationSpace] = {}

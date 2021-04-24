@@ -1,6 +1,8 @@
 from kernel_gym.service.proto.kernel_gym_service_pb2 import (
-    StartBPFRequest,
-    StartBPFReply,
+    InstallObserverRequest,
+    InstallObserverReply,
+    InstallActionRequest,
+    InstallActionReply,
     StepRequest,
     StepReply,
     Observation as PbObservation,

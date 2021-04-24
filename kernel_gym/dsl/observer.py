@@ -1,8 +1,14 @@
 from __future__ import annotations
 from typing import List, Optional
 
+class Operation(object):
+    def __init__(self):
+        pass
 
-class Function(object):
+    def render(self) -> str:
+        pass
+
+class Observer(object):
 
     def __init__(self, function_name: str):
         self._function_name: str = function_name
@@ -27,14 +33,14 @@ class Function(object):
         self._arg_observer_list.append(argument)
         return argument
 
-    def header(self, header_file_name: str) -> Function:
+    def header(self, header_file_name: str) -> Observer:
         self._header_list.append(header_file_name)
         return self
 
 
 class Argument(object):
 
-    def __init__(self, f: Function, arg_type: str, arg_name: str):
+    def __init__(self, f: Observer, arg_type: str, arg_name: str):
         self._f = f
         self._arg_type = arg_type
         self._arg_name = arg_name
@@ -52,6 +58,9 @@ class Argument(object):
     def extractor_list(self):
         return self._extractor_list
 
+    def convert(self, new_type: str, fun: str) -> Argument:
+
+
     def extract(self, prop: str = None, rescale_low: int = None, rescale_high: int = None) -> Argument:
         if prop is None:
             return self
@@ -60,13 +69,18 @@ class Argument(object):
         self._f.no_obs = self._f.no_obs + 1
         return self
 
-    def next(self) -> Function:
+    def next(self) -> Observer:
         """
 
         @rtype: object
         """
         return self._f
 
+
+class Convert(object):
+    def __init__(self, new_type: str, convert_fun:str) -> Convert:
+        self._new_type = new_type
+        self._convert_fun = convert_fun
 
 class Extractor(object):
 

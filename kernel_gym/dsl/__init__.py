@@ -1,1 +1,1 @@
-from .function import Function
+from .observer import Observer

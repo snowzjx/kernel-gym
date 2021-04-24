@@ -3,26 +3,57 @@ syntax = "proto3";
 package kernel_gym;
 
 service KernelGymService {
-  rpc StartBPF(StartBPFRequest) returns (StartBPFReply);
+  rpc InstallObserver(InstallObserverRequest) returns (InstallObserverReply);
+  rpc InstallAction(InstallActionRequest) returns (InstallActionReply);
   rpc Step(StepRequest) returns (StepReply);
 }
 
-message StartBPFRequest {
+message InstallObserverRequest {
+  string name = 1;
+  string bpf_program = 2;
+}
+
+message InstallObserverReply {
+  int32 ret_code = 1;
+}
+
+message InstallActionRequest {
   string bpf_program = 1;
 }
 
-message StartBPFReply {
+message InstallActionReply {
   int32 ret_code = 1;
 }
 
 message StepRequest {
   int64 session_id= 1;
   repeated int32 action = 2;
-  repeated int32 observation_space_index = 3;
 }
 
 message StepReply {
-  repeated Observation observation = 1;
+  bool end_of_session = 1;
+  repeated Observation observation = 2;
+}
+
+message ObservationSpace {
+  string name = 1;
+  oneof shape {
+    ScalarRangeList int64_range_list = 2;
+    ScalarRange scalar_int64_range = 3;
+  }
+  Observation default_value = 4;
+}
+
+message Observation {
+  oneof value {
+    Int64List int64_list = 1;
+    int64 scalar_int64 = 2;
+  }
+}
+
+message ActionSpace {
+  string name = 1;
+  repeated string action = 2;
 }
 
 message Int64List {
@@ -40,21 +71,4 @@ message ScalarLimit {
 
 message ScalarRangeList {
   repeated ScalarRange range = 1;
-}
-
-
-message Observation {
-  oneof value {
-    Int64List int64_list = 1;
-    int64 scalar_int64 = 2;
-  }
-}
-
-message ObservationSpace {
-  string name = 1;
-  oneof shape {
-    ScalarRangeList int64_range_list = 2;
-    ScalarRange scalar_int64_range = 3;
-  }
-  Observation default_value = 4;
 }

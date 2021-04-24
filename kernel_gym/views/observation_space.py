@@ -7,14 +7,15 @@ from gym.spaces import Space, Box
 from kernel_gym.spaces import Scalar
 from kernel_gym.service import observation_t, scalar_range2tuple
 from kernel_gym.service.proto import PbObservationSpace, PbObservation
-from kernel_gym.dsl import Function
+from kernel_gym.dsl import Observer
 
 
 class ObservationSpace(object):
     def __init__(
-            self, id: str,
+            self,
+            id: str,
             index: int,
-            dsl: Function,
+            dsl: Observer,
             space: Space,
             translate: Callable[[Union[observation_t, PbObservation]], observation_t],
             to_string: Callable[[observation_t], str],
@@ -41,7 +42,7 @@ class ObservationSpace(object):
         )
 
     @classmethod
-    def from_proto(cls, index: int, dsl: Function, proto: PbObservationSpace):
+    def from_proto(cls, index: int, dsl: Observer, proto: PbObservationSpace):
         def make_box(scalar_range_list, dtype, defaults):
             bounds = [scalar_range2tuple(r, defaults) for r in scalar_range_list]
             return Box(
@@ -100,7 +101,7 @@ class ObservationSpace(object):
     def make_derived_space(
             self,
             id: str,
-            dsl: Function,
+            dsl: Observer,
             translate: Callable[[observation_t], observation_t],
             space: Optional[Space] = None,
             default_value: Optional[observation_t] = None,

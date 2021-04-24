@@ -7,8 +7,8 @@ from bcc import BPF
 
 from kernel_gym.service.proto import (
     KernelGymServiceServicer,
-    StartBPFRequest,
-    StartBPFReply,
+    InstallActionRequest,
+    InstallActionReply,
     StepRequest,
     StepReply,
     add_KernelGymServiceServicer_to_server,
@@ -17,23 +17,25 @@ from kernel_gym.service.proto import (
 
 class BPFServiceServicer(KernelGymServiceServicer):
     def __init__(self):
-        self._b: Optional[BPF] = None
+        self._observers: Optional[BPF] = None
+        self._observer_map_name: Optional[str] = None
         self.logger = logging.getLogger("compiler_gym.server")
         self.logger.setLevel(logging.INFO)
 
-    def StartBPF(self, request: StartBPFRequest, context) -> StartBPFReply:
+    def InstallObserver(self, request: InstallActionRequest, context) -> InstallActionReply:
         self.logger.info("Installing BPF Program...")
         try:
-            self._b = BPF(text=request.bpf_program)
-            return StartBPFReply(ret_code=0)
+            self._observers = BPF(text=request.bpf_program)
+            self._observer_map_name = request.name
+            return InstallActionReply(ret_code=0)
         except Exception as e:
             self.logger.info(str(e))
-            return StartBPFReply(ret_code=-1)
+            return InstallActionReply(ret_code=-1)
 
     def Step(self, request: StepRequest, context) -> StepReply:
         self.logger.info("Requiring Stepping ...")
         # TODO For test only
-        _map = self._b["test"]
+        _map = self._observers[self._observer_map_name]
         for key in _map.keys():
             self.logger.info(f"Key: {key} and Value: {_map[key]}")
         return StepReply()
