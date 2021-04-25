@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from kernel_gym.service.bpf_connection import BPFConnection
 
 import gym
 from kernel_gym.views import (
@@ -15,6 +16,7 @@ class KernelGym(gym.Env):
 
     def __init__(
             self,
+            service_endpoint: str,
             observation_space: Optional[ObservationView],
             logging_level: Optional[int] = None
     ):
@@ -24,6 +26,10 @@ class KernelGym(gym.Env):
         self.logger.setLevel(logging_level)
 
         self._session_id: Optional[int] = None
+
+        self.service = BPFConnection(
+            endpoint=service_endpoint,
+            logger=self.logger)
 
         # TODO Setup backend BPF service
 
